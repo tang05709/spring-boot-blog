@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{backend/layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>文章</title>
+</head>
+<body>
+<div layout:fragment="breadcrumb">
+    <div class="col-sm-4">
+        <div class="page-header float-left">
+            <div class="page-title">
+                <h1>文章</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="page-header float-right">
+            <div class="page-title">
+                <ol class="breadcrumb text-right">
+                    <li><a th:href="@{/backend/dashboard/index}">首页</a></li>
+                    <li><a th:href="@{/backend/article/index}">文章</a></li>
+                    <li class="active" th:text="${action eq 'create' ? '添加':'编辑'}"></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="content">
+    <div th:replace="backend/layouts/valid_alert::validAlert"></div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <a class="layui-btn" href="404.html" th:href="@{/backend/article/index}">列表</a>
+            </div>
+            <div class="card-body card-block">
+                <form class="form" th:action="@{/backend/article/{action}(action=${action})}" th:object="${pojo}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">标题 <span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <input type="text" placeholder="请输入标题" class="form-control" th:field="*{title}" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">分类 <span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <select th:field="*{categoryId}" class="form-control">
+                                <option value="0">请选择</option>
+                                <option th:each="data:${categories}" th:value="${data.id}" th:text="${data.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">图片</label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <div class="media-picker">
+                                <button type="button" class="media-picker-btn" id="media-picker-btn" data-oss-dir="article">
+                                    <span class="fa fa-cloud-upload"></span>
+                                    <input type="hidden" th:field="*{image}" />
+                                </button>
+                                <div class="img-show">
+                                    <img th:if="${not #strings.isEmpty(pojo.image)}" th:src="${pojo.image}" />
+                                    <p th:if="${not #strings.isEmpty(pojo.image)}" class="btn btn-danger">X</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">外部链接 </label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <input type="text" placeholder="请输入外部链接" class="form-control" th:field="*{url}" />
+                            <small class="form-text text-muted">外部链接用于直接跳转到链接</small>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">简介 </label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <textarea placeholder="请输入简介" class="form-control" th:field="*{intro}"></textarea>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">seo标题 </label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <input type="text" placeholder="请输入seo标题" class="form-control" th:field="*{seoTitle}" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">seo关键字 </label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <input type="text" placeholder="请输入seo关键字" class="form-control" th:field="*{seoKeywords}" />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">seo描述 </label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <textarea placeholder="请输入seo描述" class="form-control" th:field="*{seoDescription}"></textarea>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">排序 <span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <input type="text" placeholder="请输入排序" class="form-control" th:field="*{sort}" />
+                            <small class="form-text text-muted">排序必须是大于0的数字</small>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3 text-right">
+                            <label class="form-control-label">内容 <span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <textarea class="form-control" th:field="*{content}" th:id="editer_content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col col-md-2 col-sm-3">&nbsp;</div>
+                        <div class="col-12 col-md-10 col-sm-9">
+                            <input type="submit" class="btn btn-primary" value="提交" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{backend/layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>分类</title>
+</head>
+<body>
+<div layout:fragment="breadcrumb">
+    <div class="col-sm-4">
+        <div class="page-header float-left">
+            <div class="page-title">
+                <h1>分类</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="page-header float-right">
+            <div class="page-title">
+                <ol class="breadcrumb text-right">
+                    <li><a th:href="@{/backend/dashboard/index}">首页</a></li>
+                    <li><a th:href="@{/backend/category/index}">分类</a></li>
+                    <li class="active">列表</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="content">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <a class="btn btn-success" href="404.html" th:href="@{/backend/category/add}">添加</a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- 第一层-->
+                        <div class="accordion">
+                            <div class="category-item" th:each="data : ${list}">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <span class="category-name" th:text="${data.name}"></span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <a class="btn btn-sm btn-info d-edit" href="404.html" th:href="@{/backend/category/edit/{id}(id=${data.id})}" title="修改">修改</a>
+                                        <a class="btn btn-sm btn-danger d-delete"href="javascript:void(0)" th:data-href="@{/backend/category/delete/{id}(id=${data.id})}" data-method="post" date-confirm="确定要删除么？" title="删除">删除</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

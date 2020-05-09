@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{frontend/layout}">
+<head>
+    <title th:text="${seoTitle}"></title>
+    <meta name="keywords"  th:content="${#strings.isEmpty(seoKeywords) ? config['seo_keywords'] : seoKeywords}"  />
+    <meta name="description"  th:content="${#strings.isEmpty(seoDescription) ? config['seo_description'] : seoDescription}"  />
+</head>
+<body>
+<div layout:fragment="breadcrumb">
+    <nav th:if="${kw}" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@{/}">首页</a></li>
+            <li class="breadcrumb-item"><a href="@{/search(kw=${kw}})}">搜索</a></li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${kw}"></li>
+        </ol>
+    </nav>
+</div>
+<div layout:fragment="content">
+    <div class="d-articles">
+        <div th:if="${articles}" th:each="data : ${articles}" class="card mt-2 mb-4">
+            <div class="card-header d-article-title"><a th:href="@{/article/{id}(id=${data.id})}" th:text="${data.title}">标题</a></div>
+            <div class="card-body d-article">
+                <i th:if="${not #strings.isEmpty(data.image)}" class="d-img">
+                    <a th:href="@{/article/{id}(id=${data.id})}">
+                        <img th:src="${data.image}" />
+                    </a>
+                </i>
+                <p th:class="${#strings.isEmpty(data.image) ? 'desc' : 'img-desc'}" th:text="${data.intro}"></p>
+                <div class="d-meta-info">
+                    <span class="fa fa-cubes" th:text="${data.getCategory() ==  null ? '' : data.getCategory().getName()}"></span>
+                    <span class="fa fa-clock-o" th:text="${#dates.format(data.updated, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                    <span class="fa fa-eye" th:text="${data.click}">  50</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-pagation">
+        <div th:if="${pageInfo}" class="d-pager">
+            <ul class="pagination">
+                <li th:if="${pageInfo['hasPrevious']}" class="page-item">
+                    <a th:href="@{{url}/page/{page}(url=${url}, page=${pageInfo['prevPage']}, kw = ${kw})}" class="page-link">&lt;&lt;</a>
+                </li>
+                <li class="page-item" th:classappend="${1 eq pageInfo['currentPage'] ? 'active' : ''}">
+                    <a th:href="@{{url}/(url=${url}, kw = ${kw})}" title="首页" class="page-link">1</a>
+                </li>
+                <li class="page-item">
+                    <span th:if="${pageInfo['prevStyle'] != ''}" class="page-link">…</span>
+                </li>
+                <li th:if="${pageInfo['numberPages']}" th:each="np : ${pageInfo['numberPages']}" class="page-item" th:classappend="${np eq pageInfo['currentPage'] ? 'active' : ''}">
+                    <a  th:href="@{{url}/page/{page}(url=${url}, page=${np}, kw = ${kw})}" th:text="${np}" class="page-link"></a>
+                </li>
+                <li class="page-item">
+                    <span th:if="${pageInfo['nextStyle'] != ''}" class="page-link">…</span>
+                </li>
+                <li class="page-item" th:classappend="${pageInfo['pages'] eq pageInfo['currentPage'] ? 'active' : ''}">
+                    <a th:href="@{{url}/page/{page}(url=${url}, page=${pageInfo['pages']}, kw = ${kw})}" title="尾页" th:text="${pageInfo['pages']}" class="page-link"></a>
+                </li>
+                <li class="page-item">
+                    <a th:if="${pageInfo['hasNext']}" th:href="@{{url}/page/{page}(url=${url}, page=${pageInfo['nextPage']}, kw = ${kw})}" class="page-link">&gt;&gt;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

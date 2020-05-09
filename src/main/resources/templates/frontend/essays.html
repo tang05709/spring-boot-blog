@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{frontend/layout}">
+<head>
+    <title th:text="${seoTitle}"></title>
+    <meta name="keywords"  th:content="${#strings.isEmpty(seoKeywords) ? config['seo_keywords'] : seoKeywords}"  />
+    <meta name="description"  th:content="${#strings.isEmpty(seoDescription) ? config['seo_description'] : seoDescription}"  />
+</head>
+<body>
+<div layout:fragment="breadcrumb">
+    <nav th:if="${category}" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@{/}">首页</a></li>
+            <li class="breadcrumb-item active" aria-current="page">随笔</li>
+        </ol>
+    </nav>
+</div>
+<div layout:fragment="content">
+    <div class="d-essays">
+        <div th:if="${articles}" th:each="data : ${articles}" class="card mt-2 mb-4">
+            <div class="card-header d-essay-title"><span>心情指数：</span> <img th:src="'https://tangpics.oss-cn-shenzhen.aliyuncs.com/mood/mood_' + ${data.level} + '.png'" /></div>
+            <div class="card-body d-essay">
+                <p th:text="${data.content}"></p>
+                <p th:if="${not #strings.isEmpty(data.image)}" class="d-essay-img">
+                    <img th:src="${data.image}" />
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="d-pagation">
+        <div th:if="${pageInfo}" class="d-pager">
+            <ul class="pagination">
+                <li th:if="${pageInfo['hasPrevious']}" class="page-item">
+                    <a th:href="@{{url}/page/{page}(url=${url}, page=${pageInfo['prevPage']})}" class="page-link">&lt;&lt;</a>
+                </li>
+                <li class="page-item" th:classappend="${1 eq pageInfo['currentPage'] ? 'active' : ''}">
+                    <a th:href="@{{url}/(url=${url})}" title="首页" class="page-link">1</a>
+                </li>
+                <li class="page-item">
+                    <span th:if="${pageInfo['prevStyle'] != ''}" class="page-link">…</span>
+                </li>
+                <li th:if="${pageInfo['numberPages']}" th:each="np : ${pageInfo['numberPages']}" class="page-item" th:classappend="${np eq pageInfo['currentPage'] ? 'active' : ''}">
+                    <a  th:href="@{{url}/page/{page}(url=${url}, page=${np})}" th:text="${np}" class="page-link"></a>
+                </li>
+                <li class="page-item">
+                    <span th:if="${pageInfo['nextStyle'] != ''}" class="page-link">…</span>
+                </li>
+                <li class="page-item" th:classappend="${pageInfo['pages'] eq pageInfo['currentPage'] ? 'active' : ''}">
+                    <a th:href="@{{url}/page/{page}(url=${url}, page=${pageInfo['pages']})}" title="尾页" th:text="${pageInfo['pages']}" class="page-link"></a>
+                </li>
+                <li class="page-item">
+                    <a th:if="${pageInfo['hasNext']}" th:href="@{{url}/page/{page}(url=${url}, page=${pageInfo['nextPage']})}" class="page-link">&gt;&gt;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

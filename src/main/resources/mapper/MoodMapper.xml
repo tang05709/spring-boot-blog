@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.don.donaldblog.mapper.MoodMapper">
+    <sql id="columnList">
+        `id`, `content`, `image`, `level`, `status`, `created`
+    </sql>
+
+    <select id="getAll" resultType="Mood">
+        SELECT
+        <include refid="columnList" />
+        FROM mood
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="getSearch" parameterType="Map" resultType="Mood">
+        SELECT
+        <include refid="columnList" />
+        FROM mood
+        <where>
+            <if test="content != null and content !=''">
+                <bind name="contentLike" value="'%' + _parameter.content + '%'"/>
+                `content` LIKE #{contentLike}
+            </if>
+            <if test="level != null and level !=''">
+                and `level` = #{level}
+            </if>
+            <if test="status != null and status >= 0">
+                and `status` = #{status}
+            </if>
+        </where>
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="getById" parameterType="Integer" resultType="Mood">
+        SELECT
+        <include refid="columnList" />
+        FROM mood
+        WHERE `id` = #{id}
+    </select>
+
+    <insert id="create" parameterType="Mood" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO mood(
+            `content`, `image`, `level`, `status`, `created`
+        ) VALUES (
+            #{content}, #{image}, #{level}, #{status}, #{created}
+        )
+    </insert>
+
+    <update id="softDelete">
+        UPDATE mood SET `status` = #{status} WHERE `id` = #{id}
+    </update>
+</mapper>

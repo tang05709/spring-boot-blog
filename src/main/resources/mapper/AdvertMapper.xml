@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.don.donaldblog.mapper.AdvertMapper">
+    <sql id="columnList">
+        `id`, `title`, `advert_category_id`, `url`, `intro`, `sort`, `status`, `created`, `updated`
+    </sql>
+    <resultMap id="tableMap" type="Advert">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="advertCategoryId" column="advert_category_id" />
+        <result property="url" column="url" />
+        <result property="intro" column="intro" />
+        <result property="sort" column="sort" />
+        <result property="status" column="status" />
+        <result property="created" column="created" />
+        <result property="updated" column="updated" />
+    </resultMap>
+    <resultMap id="withCategory" type="Advert">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="advertCategoryId" column="advert_category_id" />
+        <result property="url" column="url" />
+        <result property="intro" column="intro" />
+        <result property="sort" column="sort" />
+        <result property="status" column="status" />
+        <result property="created" column="created" />
+        <result property="updated" column="updated" />
+
+        <association property="advertCategory" column="advert_category_id" javaType="AdvertCategory"
+                     select="com.don.donaldblog.mapper.AdvertCategoryMapper.getById" />
+    </resultMap>
+
+    <select id="getAll" resultMap="withCategory">
+        SELECT
+        <include refid="columnList" />
+        FROM advert
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="getById" parameterType="Integer" resultMap="tableMap">
+        SELECT
+        <include refid="columnList" />
+        FROM advert
+        WHERE `id` = #{id}
+    </select>
+
+    <insert id="create" parameterType="Advert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO advert(
+            `title`, `advert_category_id`, `url`, `intro`, `sort`, `status`, `created`, `updated`
+        ) VALUES (
+            #{title}, #{advertCategoryId}, #{url}, #{intro}, #{sort}, #{status}, #{created}, #{updated}
+        )
+    </insert>
+
+    <update id="update" parameterType="Advert">
+        UPDATE advert
+        <set>
+            `title` = #{title},
+            `advert_category_id` = #{advertCategoryId},
+            `url` = #{url},
+            `intro` = #{intro},
+            `sort` = #{sort},
+            `updated` = #{updated},
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="softDelete">
+        UPDATE advert SET `status` = #{status} WHERE `id` = #{id}
+    </update>
+</mapper>

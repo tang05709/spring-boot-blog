@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="/plugins/bootstrap/bootstrap.min.css" th:href="@{/plugins/bootstrap/bootstrap.min.css}">
+    <link rel="stylesheet" href="/plugins/admin/style.min.css" th:href="@{/plugins/admin/style.min.css}">
+</head>
+<body class="bg-dark">
+<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+            <div class="login-logo">
+                <img class="align-content" th:src="@{/logo.png}" alt="logo" width="150">
+            </div>
+            <div class="login-form">
+                <form class="pt-3" name="f" th:action="@{/auth/login-in}" method="post">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" class="form-control" name="username" id="username" placeholder="用户名" />
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="密码" />
+                    </div>
+                    <div class="form-group">
+                        <label>验证码</label>
+                        <div class="row">
+                            <div class="col-sm-8"><input type="password" class="form-control" id="code" name="code" placeholder="验证码" /></div>
+                            <div class="col-sm-4"><img th:src="@{/auth/verify-code}" th:onclick="this.src='/auth/verify-code?'+Math.random();" /></div>
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-success btn-flat m-b-30 m-t-30" value="登录" />
+
+                    <div class="m-t-15 text-center text-danger" th:if="${param.error}">
+                        <span th:if="${#strings.trim(param.error) eq 'verify_error'}" th:text="验证码错误"></span>
+                        <span th:unless="${#strings.trim(param.error) eq 'verify_error'}" th:text="用户名或密码错误"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

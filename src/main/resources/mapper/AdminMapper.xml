@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.don.donaldblog.mapper.AdminMapper">
+    <sql id="columnList">
+        `id`, `username`, `password`, `created`, `last_login`, `last_ip`, `login_count`, `enabled`, `locked`
+    </sql>
+    <resultMap id="tableMap" type="Admin">
+        <id property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="created" column="created" />
+        <result property="lastLogin" column="last_login" />
+        <result property="lastIp" column="last_ip" />
+        <result property="loginCount" column="login_count" />
+        <result property="enabled" column="enabled" />
+        <result property="locked" column="locked" />
+    </resultMap>
+
+    <select id="getByName" resultMap="tableMap">
+        SELECT
+        <include refid="columnList" />
+        FROM admin
+        WHERE `username` = #{username}
+    </select>
+
+    <update id="updateLogin">
+        UPDATE admin
+        <set>
+            `last_login` = #{lastLogin},
+            `last_ip` = #{lastIp},
+            `login_count` = #{loginCount},
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE admin
+        <set>
+            `password` = #{password},
+        </set>
+        WHERE `id` = #{id}
+    </update>
+
+    <select id="getUserRolesById" resultType="com.don.donaldblog.model.Role">
+        SELECT role.`id`, role.`name`, role.`title` FROM
+        role, admin_role
+        WHERE role.`id` = admin_role.`role_id`
+        AND admin_role.`admin_id` = #{id}
+    </select>
+
+</mapper>

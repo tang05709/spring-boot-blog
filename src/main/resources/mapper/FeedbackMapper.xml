@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.don.donaldblog.mapper.FeedbackMapper">
+    <sql id="columnList">
+        `id`, `title`, `name`, `phone`, `email`, `address`, `content`, `status`, `created`
+    </sql>
+
+    <select id="getAll" resultType="Feedback">
+        SELECT
+        <include refid="columnList" />
+        FROM feedback
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="getSearch" parameterType="Map" resultType="Feedback">
+        SELECT
+        <include refid="columnList" />
+        FROM feedback
+        <where>
+            <if test="title != null and title !=''">
+                <bind name="titleLike" value="'%' + _parameter.title + '%'"/>
+                `title` LIKE #{titleLike}
+            </if>
+            <if test="name != null and name !=''">
+                <bind name="nameLike" value="'%' + _parameter.name + '%'"/>
+                `name` LIKE #{nameLike}
+            </if>
+            <if test="content != null and content !=''">
+                <bind name="contentLike" value="'%' + _parameter.content + '%'"/>
+                `content` LIKE #{contentLike}
+            </if>
+            <if test="status != null and status >= 0">
+                and `status` = #{status}
+            </if>
+        </where>
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="getById" parameterType="Integer" resultType="Feedback">
+        SELECT
+        <include refid="columnList" />
+        FROM feedback
+        WHERE `id` = #{id}
+    </select>
+
+    <insert id="create" parameterType="Feedback" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO feedback(
+            `title`, `name`, `phone`, `email`, `address`, `content`, `status`, `created`
+        ) VALUES (
+            #{title}, #{name}, #{phone}, #{email}, #{address}, #{content}, #{status}, #{created}
+        )
+    </insert>
+
+    <update id="softDelete">
+        UPDATE feedback SET `status` = #{status} WHERE `id` = #{id}
+    </update>
+</mapper>

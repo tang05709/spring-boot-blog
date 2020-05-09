@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{backend/layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>友情链接</title>
+</head>
+<body>
+<div layout:fragment="breadcrumb">
+    <div class="col-sm-4">
+        <div class="page-header float-left">
+            <div class="page-title">
+                <h1>友情链接</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="page-header float-right">
+            <div class="page-title">
+                <ol class="breadcrumb text-right">
+                    <li><a th:href="@{/backend/dashboard/index}">首页</a></li>
+                    <li><a th:href="@{/backend/friendlink/index}">友情链接</a></li>
+                    <li class="active">列表</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="content">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <a class="btn btn-success" href="404.html" th:href="@{/backend/friendlink/add}">添加</a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="10%">编号</th>
+                                <th width="50%">名称</th>
+                                <th width="20%">排序</th>
+                                <th width="20%">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="data : ${list}">
+                                <td th:text="${data.id}"></td>
+                                <td><a th:href="${data.url}" th:text="${data.name}" target="_blank"></a></td>
+                                <td th:text="${data.sort}"></td>
+                                <td>
+                                    <a class="btn btn-sm btn-info d-edit" href="404.html" th:href="@{/backend/friendlink/edit/{id}(id=${data.id})}" title="修改">修改</a>
+                                    <a class="btn btn-sm btn-danger d-delete" href="javascript:void(0)" th:data-href="@{/backend/friendlink/delete/{id}(id=${data.id})}" data-method="post" date-confirm="确定要删除么？" title="删除">
+                                     <span th:if="${data.status == 9}">
+                                        启用
+                                     </span>
+                                                <span th:unless="${data.status == 9}">
+                                        禁用
+                                     </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

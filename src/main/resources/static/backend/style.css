@@ -1,0 +1,21 @@
+.media-picker .media-picker-btn{
+    font-size: 4em;
+    color: #007bff;
+    border: none;
+    background: none;
+    line-height: 24px;
+}
+.media-picker .img-show {
+    margin-top: 20px;
+    width: 500px;
+}
+.media-picker .img-show img {
+    width: 100%;
+    max-width: 450px;
+}
+.accordion .category-item {
+    padding: 0.5rem 0;
+}
+.hidden {
+    display: none !important;
+}

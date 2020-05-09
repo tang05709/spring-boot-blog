@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.don.donaldblog.mapper.GalleryMapper">
+    <sql id="columnList">
+        `id`, `article_id`, `gallery`, `sort`
+    </sql>
+    <resultMap id="tableMap" type="Gallery">
+        <id property="id" column="id" />
+        <result property="articleId" column="article_id" />
+        <result property="gallery" column="gallery" />
+        <result property="sort" column="sort" />
+    </resultMap>
+
+    <select id="getAll" resultType="Config">
+        SELECT
+        <include refid="columnList" />
+        FROM gallery
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="getByArticle" parameterType="Integer" resultType="Config">
+        SELECT
+        <include refid="columnList" />
+        FROM gallery
+        WHERE `article_id` = #{articleId}
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="getById" parameterType="Integer" resultType="Config">
+        SELECT
+        <include refid="columnList" />
+        FROM gallery
+        WHERE `id` = #{id}
+    </select>
+
+    <insert id="create" parameterType="Config" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO gallery(
+            `article_id`, `gallery`, `sort`
+        ) VALUES (
+            #{articleId}, #{gallery}, #{sort}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM gallery WHERE `id` = #{id}
+    </delete>
+</mapper>
